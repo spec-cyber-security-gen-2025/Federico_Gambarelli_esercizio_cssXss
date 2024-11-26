@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- SECURE -->
+  <!-- <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'nonce-random1234' https://*.jsdelivr.net;"> -->
+  <title>Cross-Site Scripting</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+  <style>
+    #background {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: -1;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="background" style="background-color: white"></div>
+  <h1>css xss</h1>
+  <ul class="list-group">
+    <li class="list-group-item p-0" style="background-color: red"><a class="btn d-flex m-0" href="/#red">Red</a>
+    </li>
+    <li class="list-group-item p-0" style="background-color: blue"><a class="btn d-flex m-0" href="/#blue">Blue</a></li>
+    <li class="list-group-item p-0" style="background-color: white"><a class="btn d-flex m-0" href="/#white">White</a>
+    </li>
+    <li class="list-group-item p-0" style="background-color: pink"><a class="btn d-flex m-0" href="/#pink">Pink</a></li>
+    <li class="list-group-item p-0" style="background-color: green"><a class="btn d-flex m-0" href="/#green">Green</a>
+    </li>
+  </ul>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+    crossorigin="anonymous"></script>
+  
+  <script>
+    // UNSECURE
+    //  Payload da inserire dopo # nel'url
+    //  "><img src="x" onerror="alert(1)
+    //  
+    //
+    addEventListener('hashchange', () => {
+      const bgColor = decodeURIComponent(document.location.hash.slice(1));
+      const background = document.querySelector('#background');
+      background.outerHTML = `<div id="background" style="background-color: ${bgColor}"></div>`
+    })
+  </script>
+
+  <script nonce="random1234">
+  // SECURE
+  //   addEventListener('hashchange', () => {
+  //     const bgColor = decodeURIComponent(document.location.hash.slice(1));
+  //     const background = document.querySelector('#background');
+
+  //     // Validare che il colore sia sicuro
+  //     const isValidColor = /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$|^(rgb|rgba|hsl|hsla)\([^\)]+\)$|^[a-zA-Z]+$/.test(bgColor);
+      
+  //     if (isValidColor) {
+  //         background.style.backgroundColor = bgColor; // Imposta direttamente lo stile
+  //     } else {
+  //         console.warn('Invalid color value:', bgColor);
+  //     }
+  // });
+  </script>
+</body>
+
+</html>
