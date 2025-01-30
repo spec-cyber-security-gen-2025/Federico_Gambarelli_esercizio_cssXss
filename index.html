@@ -8,7 +8,7 @@
   <!-- <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'nonce-random1234' https://*.jsdelivr.net;"> -->
   <title>Cross-Site Scripting</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+  integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
   <style>
     #background {
       position: absolute;
@@ -35,37 +35,37 @@
     </li>
   </ul>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
-    crossorigin="anonymous"></script>
-  
-  <script>
+  integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+  crossorigin="anonymous"></script>
+
+  <!-- <script>
     // UNSECURE
     //  Payload da inserire dopo # nel'url
     //  "><img src="x" onerror="alert(1)
-    //  
     //
+    //
+    addEventListener('hashchange', () => {
+    const bgColor = decodeURIComponent(document.location.hash.slice(1));
+    const background = document.querySelector('#background');
+    background.outerHTML = `<div id="background" style="background-color: ${bgColor}"></div>`
+    })
+  </script> -->
+
+  <script nonce="random1234">
+    // SECURE
     addEventListener('hashchange', () => {
       const bgColor = decodeURIComponent(document.location.hash.slice(1));
       const background = document.querySelector('#background');
-      background.outerHTML = `<div id="background" style="background-color: ${bgColor}"></div>`
-    })
-  </script>
 
-  <script nonce="random1234">
-  // SECURE
-  //   addEventListener('hashchange', () => {
-  //     const bgColor = decodeURIComponent(document.location.hash.slice(1));
-  //     const background = document.querySelector('#background');
+      // Validare che il colore sia sicuro
+      const isValidColor = /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$|^(rgb|rgba|hsl|hsla)\([^\)]+\)$|^[a-zA-Z]+$/.test(bgColor);
 
-  //     // Validare che il colore sia sicuro
-  //     const isValidColor = /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$|^(rgb|rgba|hsl|hsla)\([^\)]+\)$|^[a-zA-Z]+$/.test(bgColor);
-      
-  //     if (isValidColor) {
-  //         background.style.backgroundColor = bgColor; // Imposta direttamente lo stile
-  //     } else {
-  //         console.warn('Invalid color value:', bgColor);
-  //     }
-  // });
+      if (isValidColor) {
+        background.style.backgroundColor = bgColor; // Imposta direttamente lo stile
+      } else {
+        console.warn('Invalid color value:', bgColor);
+      }
+    });
   </script>
 </body>
 
